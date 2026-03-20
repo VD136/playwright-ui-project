@@ -62,6 +62,7 @@ jobs:
 
     permissions:
       contents: write            # needed to push to gh-pages branch
+      
       steps:
     - uses: actions/checkout@v4
 
