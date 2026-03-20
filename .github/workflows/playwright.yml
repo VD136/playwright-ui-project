@@ -26,9 +26,14 @@ jobs:
         REGISTRATION_PASSWORD: ${{ secrets.REGISTRATION_PASSWORD }}
         EXISTING_USERNAME: ${{ secrets.EXISTING_USERNAME }}
       run: npx playwright test
-      # Install Allure CLI before generating report
-    - name: Install Allure CLI
-      run: npm install -g allure-commandline --save-dev
+      # debug step — check allure-results folder contents on CI
+    - name: Check allure-results folder
+      if: ${{ !cancelled() }}
+      run: |
+        echo "=== allure-results contents ==="
+        ls -la allure-results/ || echo "allure-results folder does not exist!"
+        echo "=== number of files ==="
+        find allure-results -type f | wc -l || echo "0 files found"
       # generate allure report from raw results
     - name: Generate Allure Report
       if: ${{ !cancelled() }}
