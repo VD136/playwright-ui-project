@@ -26,6 +26,9 @@ jobs:
         REGISTRATION_PASSWORD: ${{ secrets.REGISTRATION_PASSWORD }}
         EXISTING_USERNAME: ${{ secrets.EXISTING_USERNAME }}
       run: npx playwright test
+      # Install Allure CLI before generating report
+    - name: Install Allure CLI
+      run: npm install -g allure-commandline --save-dev
       # generate allure report from raw results
     - name: Generate Allure Report
       if: ${{ !cancelled() }}
