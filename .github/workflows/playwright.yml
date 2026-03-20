@@ -54,3 +54,27 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
+ # ✅ new job — publishes allure report to live GitHub Pages URL
+  publish-report:
+    needs: test                  # waits for test job to finish first
+    runs-on: ubuntu-latest
+    if: ${{ !cancelled() }}
+
+    permissions:
+      contents: write            # needed to push to gh-pages branch
+      steps:
+    - uses: actions/checkout@v4
+
+      # download the allure report artifact from test job
+    - name: Download Allure Report
+      uses: actions/download-artifact@v4
+      with:
+        name: allure-report
+        path: allure-report
+
+      # publish to GitHub Pages — creates live URL
+    - name: Publish Allure Report to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: allure-report
