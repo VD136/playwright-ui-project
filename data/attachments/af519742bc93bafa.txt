@@ -1,0 +1,2 @@
+[ 'Arrays', 'Linked List', 'Stack', 'Queue', 'Tree', 'Graph' ]
+https://dsportalapp.herokuapp.com/data-structures-introduction/
