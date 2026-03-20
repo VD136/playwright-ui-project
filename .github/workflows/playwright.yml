@@ -4,6 +4,7 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+
 jobs:
   test:
     timeout-minutes: 60
@@ -38,14 +39,14 @@ jobs:
     - name: Generate Allure Report
       if: ${{ !cancelled() }}
       run: npx allure generate allure-results --clean -o allure-report
-      #upload allure report so you can download it from GitHub Actions UI
+      # upload allure report so you can download it from GitHub Actions UI
     - name: Upload Allure Report
       uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
         name: allure-report
         path: allure-report/
-        retention-days: 30   
+        retention-days: 30
       # upload playwright html report as backup
     - name: Upload Playwright HTML Report
       uses: actions/upload-artifact@v4
@@ -54,25 +55,22 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
- # ✅ new job — publishes allure report to live GitHub Pages URL
+
+  # new job — publishes allure report to live GitHub Pages URL
   publish-report:
-    needs: test                  # waits for test job to finish first
+    needs: test
     runs-on: ubuntu-latest
     if: ${{ !cancelled() }}
-
     permissions:
-      contents: write            # needed to push to gh-pages branch
-      
-      steps:
+      contents: write
+    steps:
     - uses: actions/checkout@v4
-
       # download the allure report artifact from test job
     - name: Download Allure Report
       uses: actions/download-artifact@v4
       with:
         name: allure-report
         path: allure-report
-
       # publish to GitHub Pages — creates live URL
     - name: Publish Allure Report to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
