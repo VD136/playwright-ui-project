@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 
 export class LoginPage {
   readonly usernameInput: Locator;
@@ -10,8 +10,8 @@ export class LoginPage {
   constructor(private readonly page: Page) {
     this.getStartedLink = this.page.getByRole('link', { name: 'Get Started' });
     this.signInLink = this.page.getByRole('link', { name: 'Sign in' });
-    this.usernameInput = this.page.getByLabel('Username');
-    this.passwordInput = this.page.getByLabel('Password:');
+    this.usernameInput = this.page.locator('input[name="username"]');
+    this.passwordInput = this.page.locator('input[name="password"]');
     this.loginButton = this.page.getByRole('button', { name: 'Login' });
   }
 
@@ -22,27 +22,23 @@ export class LoginPage {
   }
 
   private resolveCreds( username?: string | null,password?: string | null ): { username: string; password: string } {
-    const envUsername = process.env.DSALGO_USERNAME;
-    const envPassword = process.env.DSALGO_PASSWORD;
+    const envUsername = process.env.DSALGO_USERNAME ?? '';
+    const envPassword = process.env.DSALGO_PASSWORD ?? '';
 
-    const finalUsername = username?.trim() || envUsername;
-    const finalPassword = password?.trim() || envPassword;
-
-    if (!finalUsername || !finalPassword) {
-      throw new Error(
-        'Missing credentials. Provide username/password or set DSALGO_USERNAME and DSALGO_PASSWORD.'
-      );
-    }
-
-    return { username: finalUsername, password: finalPassword };
+return {
+  username: username !== undefined && username !== null ? username : envUsername,
+  password: password !== undefined && password !== null ? password : envPassword
+};
   }
 
+  
+
   async fillCredentials(username?: string | null, password?: string | null) {
-    const { username: finalUsername, password: finalPassword } =
+    const { username: envUsername, password: envPassword } =
       this.resolveCreds(username, password);
 
-    await this.usernameInput.fill(finalUsername);
-    await this.passwordInput.fill(finalPassword);
+    await this.usernameInput.fill(envUsername);
+    await this.passwordInput.fill(envPassword);
   }
 
   async submit() {
@@ -61,3 +57,4 @@ export class LoginPage {
     
   }
 }
+

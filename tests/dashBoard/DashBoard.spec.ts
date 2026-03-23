@@ -2,21 +2,29 @@ import { test, expect } from "../../fixtures/baseTest";
 import { Dashboard } from "../../pages/DashBoardPage";
 
 
-test('dashboard Page validation' , async({page}) =>{
+test.describe('Dashboard Functionality', () => {
+    let dp: Dashboard;
 
-    const dp = new Dashboard(page);
-   
-    await page.goto('/home');
+    test.beforeEach(async ({ page }) => {
+        dp = new Dashboard(page);
+        await page.goto('/home');
+    });
 
-   const dropdownlist = await dp.expand_dropdownmenu();
-   expect(dropdownlist).toEqual(['Arrays','Linked List','Stack','Queue','Tree','Graph']);
+    test('dashboard Page validation', async ({ page }) => {
 
-   const details = await dp.validateDashboard_DS();
-   console.log(details.url);
-   expect(details.heading).toContain('Data Structures-Introduction');
-   
-    
+        await dp.expand_dropdownmenu();
+        await expect(dp.dropdownnMenuList).toHaveText(['Arrays', 'Linked List', 'Stack', 'Queue', 'Tree', 'Graph']);
+        await dp.validateDashboard_DS();
+        await expect(page).toHaveURL(/.*data-structures/);
+       await expect(dp.heading_DataStructures).toHaveText('Data Structures-Introduction');
+
+    });
+
+    test('Time Complexity Page validation', async ({ page }) => {
+
+        await dp.navigateToTimeComplexity();
+        await expect(page).toHaveURL(/.*time-complexity/);
+        await expect(dp.heading_TimeComplexity).toHaveText('Time Complexity');
+    });
 
 });
-
-
