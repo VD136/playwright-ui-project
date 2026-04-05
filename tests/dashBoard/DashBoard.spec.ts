@@ -13,6 +13,7 @@ test.describe('Dashboard Functionality', () => {
     test('dashboard Page validation', async ({ page }) => {
 
         await dp.expand_dropdownmenu();
+        await page.pause();
         await expect(dp.dropdownnMenuList).toHaveText(['Arrays', 'Linked List', 'Stack', 'Queue', 'Tree', 'Graph']);
         await dp.validateDashboard_DS();
         await expect(page).toHaveURL(/.*data-structures/);
@@ -26,5 +27,4 @@ test.describe('Dashboard Functionality', () => {
         await expect(page).toHaveURL(/.*time-complexity/);
         await expect(dp.heading_TimeComplexity).toHaveText('Time Complexity');
     });
-
 });
